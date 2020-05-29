@@ -1,0 +1,93 @@
+<mvc:View
+        controllerName="org.ubb.books.controller.BookList"
+        xmlns:mvc="sap.ui.core.mvc"
+        xmlns:core="sap.ui.core"
+        xmlns:f="sap.ui.layout.form" xmlns="sap.m">
+
+    <Table id="idBooksTable"
+           items="{
+			path: '/BookEntitySet',
+			sorter: {
+				path: 'Title'
+			}
+		}"
+           growing="true"
+           growingThreshold="10"
+           mode="SingleSelectLeft">
+        <headerToolbar>
+            <Toolbar height='110%'>
+
+                <content>
+                    <HBox width='100%' wrap='Wrap'>
+                        <items>
+                            <Button
+                                text="Delete"
+                                press="onDeleteBook"
+                            />
+                            <Button
+                                text="Add Book"
+                                press="onInsertBook"
+                            />
+                            <Button
+                                text="Update Book"
+                                press="onUpdateBook"
+                            />
+                            <Input id="isbnInput" value="" placeholder="ISBN of new book."/>
+                            <Input id="titleInput" value="" placeholder="Title of the book"/>
+                            <Input id="authorInput" value="" placeholder="Author of new book."/>
+                            <DatePicker id="dateFrom" value=""/>
+                            <DatePicker id="dateTo" value=""/>
+                            <Input id="languageInput" value="" placeholder="Language code of the book"/>
+                            <Button
+                                text="Filter Books"
+                                press="onBookFilter"
+                            />
+                            <Button 
+                                press="onSortButtonPressed" 
+                                text="{i18n>sort}"
+                                icon="sap-icon://drop-down-list" 
+                                tooltip="{i18n>sort}"
+                            />
+                        </items>
+                    </HBox>
+                </content>
+            </Toolbar>
+        </headerToolbar>
+
+        <columns>
+            <Column>
+                <Text text="Title"/>
+            </Column>
+            <Column>
+                <Text text="Author"/>
+            </Column>
+            <Column>
+                <Text text="Published on"/>
+            </Column>
+            <Column>
+                <Text text="Language"/>
+            </Column>
+            <Column>
+                <Text text="Available books"/>
+            </Column>
+        </columns>
+        <items>
+            <ColumnListItem>
+                <cells>
+                    <ObjectIdentifier
+                            title="{Title}"
+                            text="{ISBN}"/>
+                    <Text text="{Author}"/>
+                    <Text text="{
+							path: 'DatePublished',
+							type: 'sap.ui.model.type.Date'
+               			}"
+                    />
+                    <Text text="{Language}"/>
+                    <Text text="{= parseInt(${AvailableNumber}) }"/>
+                </cells>
+            </ColumnListItem>
+        </items>
+    </Table>
+
+</mvc:View>
