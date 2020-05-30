@@ -104,6 +104,9 @@ sap.ui.define([
                 }
             this.newBookDialog.close();
         },
+        closeDialog(oEvent){
+            this.newBookDialog.close();
+        },
         onBookFilter(oEvent){
             console.log(oEvent);
             var aFilter = [];
