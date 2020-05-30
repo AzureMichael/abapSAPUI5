@@ -8,10 +8,10 @@
   <ViewSettingsDialog confirm="onConfirm">
     <sortItems>
       <ViewSettingsItem key="ISBN" text="ISBN" selected="true"/>
-      <ViewSettingsItem key="Title" text="Title"/>
-      <ViewSettingsItem key="Author" text="Author"/>
-      <ViewSettingsItem key="Language" text="Language"/>
-      <ViewSettingsItem key="DatePublished" text="Publication Date"/>
+      <ViewSettingsItem key="Title" text="{i18n>Title}"/>
+      <ViewSettingsItem key="Author" text="{i18n>Author}"/>
+      <ViewSettingsItem key="Language" text="{i18n>Language}"/>
+      <ViewSettingsItem key="DatePublished" text="{i18n>Date}"/>
     </sortItems>
   </ViewSettingsDialog>
 </core:FragmentDefinition>

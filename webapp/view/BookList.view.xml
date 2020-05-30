@@ -12,34 +12,33 @@
 			}
 		}"
            growing="true"
-           growingThreshold="10"
+           growingThreshold="5"
            mode="SingleSelectLeft">
         <headerToolbar>
-            <Toolbar height='110%'>
-
+            <OverflowToolbar height='110%'>
                 <content>
-                    <HBox width='100%' wrap='Wrap'>
+                    <HBox width='100%'>
                         <items>
                             <Button
-                                text="Delete"
-                                press="onDeleteBook"
-                            />
-                            <Button
-                                text="Add Book"
+                                text="{i18n>add}"
                                 press="onInsertBook"
                             />
                             <Button
-                                text="Update Book"
+                                text="{i18n>update}"
                                 press="onUpdateBook"
                             />
-                            <Input id="isbnInput" value="" placeholder="ISBN of new book."/>
-                            <Input id="titleInput" value="" placeholder="Title of the book"/>
-                            <Input id="authorInput" value="" placeholder="Author of new book."/>
-                            <DatePicker id="dateFrom" value=""/>
-                            <DatePicker id="dateTo" value=""/>
-                            <Input id="languageInput" value="" placeholder="Language code of the book"/>
                             <Button
-                                text="Filter Books"
+                                text="{i18n>delete}"
+                                press="onDeleteBook"
+                            />
+                            <Input id="isbnInput" value="" placeholder="ISBN"/>
+                            <Input id="titleInput" value="" placeholder="{i18n>Title}"/>
+                            <Input id="authorInput" value="" placeholder="{i18n>Author}"/>
+                            <DatePicker id="dateFrom" value="" placeholder="{i18n>DateStart}"/>
+                            <DatePicker id="dateTo" value="" placeholder="{i18n>DateEnd}"/>
+                            <Input id="languageInput" value="" placeholder="{i18n>Language}"/>
+                            <Button
+                                text="{i18n>filter}"
                                 press="onBookFilter"
                             />
                             <Button 
@@ -51,24 +50,24 @@
                         </items>
                     </HBox>
                 </content>
-            </Toolbar>
+            </OverflowToolbar>
         </headerToolbar>
 
         <columns>
             <Column>
-                <Text text="Title"/>
+                <Text text="{i18n>Title}"/>
             </Column>
             <Column>
-                <Text text="Author"/>
+                <Text text="{i18n>Author}"/>
             </Column>
             <Column>
-                <Text text="Published on"/>
+                <Text text="{i18n>Date}"/>
             </Column>
             <Column>
-                <Text text="Language"/>
+                <Text text="{i18n>Language}"/>
             </Column>
             <Column>
-                <Text text="Available books"/>
+                <Text text="{i18n>AvailableNumber}"/>
             </Column>
         </columns>
         <items>

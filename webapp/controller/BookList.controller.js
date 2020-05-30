@@ -33,6 +33,7 @@ sap.ui.define([
             this.getView().getModel().remove(sBookPath);
         },
         onInsertBook(oEvent){
+            sap.ui.getCore().byId("isbnInput").setEnabled(true);
             this.update = false;
             this.book.ISBN = "";
             this.book.Title="",
@@ -42,21 +43,30 @@ sap.ui.define([
             this.book.TotalNumber="",
             this.book.AvailableNumber= 0
             this.newBookDialog.getModel().setData(this.book);
+            this.newBookDialog.setModel(this.getView().getModel("i18n"), "i18n");
             this.newBookDialog.open();  
         },
         onUpdateBook(oEvent){
+            this.oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
+            sap.ui.getCore().byId("isbnInput").setEnabled(false);
             this.update=true;
             const aSelContexts = this.byId("idBooksTable").getSelectedContexts();
-            var selectedBook = aSelContexts[0].getObject();
-            var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "dd/MM/yyyy" });
-            var dateStrBook = dateFormat.format(new Date(selectedBook.DatePublished));
-            this.book = selectedBook;
-            this.book.DatePublished = dateStrBook;
-            this.newBookDialog.getModel().setData(this.book);
-            this.newBookDialog.open();
+            if(!aSelContexts[0]){
+                MessageToast.show(this.oResourceBundle.getText("errorNoBookSelected"));
+            }
+            else{
+                var selectedBook = aSelContexts[0].getObject();
+                var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({pattern : "dd/MM/yyyy" });
+                var dateStrBook = dateFormat.format(new Date(selectedBook.DatePublished));
+                this.book = selectedBook;
+                this.book.DatePublished = dateStrBook;
+                this.newBookDialog.getModel().setData(this.book);
+                this.newBookDialog.setModel(this.getView().getModel("i18n"), "i18n");
+                this.newBookDialog.open();
+                }
         },
         saveBook(oEvent){
-            this.oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
+            var oResourceBundle = this.getView().getModel("i18n").getResourceBundle();
             if(this.update==true){
                 const aSelContexts = this.byId("idBooksTable").getSelectedContexts();
                 var path = aSelContexts[0].getPath();
@@ -69,15 +79,31 @@ sap.ui.define([
                 console.log(this.oResourceBundle.getText("appTitle"))
                 oModel.update(path, this.book, {
                     success: function(oEvent){
-                        MessageToast.show("Book succesfully Updated");
+                        MessageToast.show(oResourceBundle.getText("successUpdateRequest"));
                     },
                     error: function(oEvent){
                         console.log(oEvent);
                         var response = oEvent.responseText;
                         var responseObject = JSON.parse(response);
                         var responseErrorText = responseObject.error.innererror.errordetails[0].message;
-                        var resultMessage = responseErrorText.substring(8);
-                        MessageToast.show("Error at book update" + resultMessage);
+                        var resultMessage = responseErrorText.substring(12);
+                        if(resultMessage == "The number of copies in the library must not be smaller than the number of available copies."){
+                            MessageToast.show(oResourceBundle.getText("errorUpdateRequest") + ": " + oResourceBundle.getText("error_number_greater"));
+                        }else
+                        if(resultMessage == "The Book with the given ISBN has not been found in the database."){
+                            MessageToast.show(oResourceBundle.getText("errorUpdateRequest") + ": " + oResourceBundle.getText("error_isbn_not_found"));
+                        }else
+                        if(resultMessage == "The book could not be updated"){
+                            MessageToast.show(oResourceBundle.getText("errorUpdateRequest")+ ": " + oResourceBundle.getText("error_update_error"));
+                        }else
+                        if(resultMessage == "The Book could not be added in the database."){
+                            MessageToast.show(oResourceBundle.getText("errorUpdateRequest")+ ": " + oResourceBundle.getText("error_added_error"));
+                        }else
+                        if(resultMessage == "The book could not be deleted."){
+                            MessageToast.show(oResourceBundle.getText("errorUpdateRequest")+ ": " + oResourceBundle.getText("error_delete_error"));
+                        }else{
+                            MessageToast.show(oResourceBundle.getText("errorUpdateRequest"));
+                        }
                     }
                 });
             }
@@ -90,15 +116,31 @@ sap.ui.define([
                 var oModel = this.getView().getModel();
                 oModel.create('/BookEntitySet', this.book, {
                     success: function(){
-                        MessageToast.show("Book succesfully created");
+                        MessageToast.show(oResourceBundle.getText("successCreateRequest"));
                     },
                     error: function(oEvent){
                         console.log(oEvent);
                         var response = oEvent.responseText;
                         var responseObject = JSON.parse(response);
                         var responseErrorText = responseObject.error.innererror.errordetails[0].message;
-                        var resultMessage = responseErrorText.substring(8);
-                        MessageToast.show("Error at book creation" + resultMessage);
+                        var resultMessage = responseErrorText.substring(12);
+                        if(resultMessage == "The number of copies in the library must not be smaller than the number of available copies."){
+                            MessageToast.show(oResourceBundle.getText("errorCreateRequest") + ": " + oResourceBundle.getText("error_number_greater"));
+                        }else
+                        if(resultMessage == "The Book with the given ISBN has not been found in the database."){
+                            MessageToast.show(oResourceBundle.getText("errorCreateRequest") + ": " + oResourceBundle.getText("error_isbn_not_found"));
+                        }else
+                        if(resultMessage == "The book could not be updated"){
+                            MessageToast.show(oResourceBundle.getText("errorCreateRequest")+ ": " + oResourceBundle.getText("error_update_error"));
+                        }else
+                        if(resultMessage == "The Book could not be added in the database."){
+                            MessageToast.show(oResourceBundle.getText("errorCreateRequest")+ ": " + oResourceBundle.getText("error_added_error"));
+                        }else
+                        if(resultMessage == "The book could not be deleted."){
+                            MessageToast.show(oResourceBundle.getText("errorCreateRequest")+ ": " + oResourceBundle.getText("error_delete_error"));
+                        }else{
+                            MessageToast.show(oResourceBundle.getText("errorCreateRequest"));
+                        }
                     }
                 });
                 }
@@ -145,6 +187,7 @@ sap.ui.define([
         },
         onSortButtonPressed: function(oEvent) { 
             this._oDialog = sap.ui.xmlfragment("org.ubb.books.fragments.Sorter", this);
+            this._oDialog.setModel(this.getView().getModel("i18n"), "i18n");
             this._oDialog.open();
         },
         onConfirm: function(oEvent) {
